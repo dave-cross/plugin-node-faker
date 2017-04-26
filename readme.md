@@ -15,6 +15,8 @@ In `data.json`, add Faker API methods as strings. Call the vars as you normally 
 }
 ```
 
+Check out Faker on NPM for all the different API methods (https://www.npmjs.com/package/faker).
+
 ## Work in process
 
 **This is not on NPM yet.** I have concerns that it isn't as optimal as it could be. If you have suggestions on how to improve it, I am all ears and ready to learn. For now, I'm `npm link`ing the module into a PL instance.
