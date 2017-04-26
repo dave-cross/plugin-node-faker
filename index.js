@@ -2,29 +2,38 @@
 
 const pluginName = 'plugin-node-faker';
 
-
 const faker = require('faker');
 
-function onAddFakerData(patternlab) {
-  // A list of things we'll iterate over.
-  var dataObjects = ['data', 'listitems'];
 
-  dataObjects.forEach(function (dataObject) {
-    // Convert data to JSON string and process. Then, return it to an object.
-    var stringData = JSON.stringify(patternlab[dataObject], (key, value) => {
-      // find all the fakers
-      if (typeof value === 'string' && value.indexOf("faker") !== -1) {
-        var fakerItem = value.slice(6); // assume "faker." is the first 6 chars of value
-        try {
-          return faker.fake(`{{${fakerItem}}}`);
-        } catch (e) {
-          console.log("Uh oh!", e);
-        }
+
+function convertFakerData(data) {
+  // Convert data to JSON string and process. Then, return it to an object.
+  var stringData = JSON.stringify(data, (key, value) => {
+    // find all the fakers
+    if (typeof value === 'string' && value.indexOf("faker") !== -1) {
+      var fakerItem = value.slice(6); // assume "faker." is the first 6 chars of value
+      try {
+        return faker.fake(`{{${fakerItem}}}`);
+      } catch (e) {
+        console.log("Uh oh!", e);
+        process.exit(1);
       }
-      return value;
-    });
-    patternlab[dataObject] = JSON.parse(stringData);
+    }
+    return value;
   });
+  return JSON.parse(stringData);
+}
+
+function addMainFakerData(patternlab) {
+  patternlab.data = convertFakerData(patternlab.data);
+  patternlab.listitems = convertFakerData(patternlab.listitems);
+}
+
+function addPatternFakerData(patternlab, pattern) {
+  // Tried changing listitems here, but it doesn't want to appear in patterns at this event.
+  // Probably tarketing wrong object data.
+  // More research later. For now, two separate events.
+  pattern.jsonFileData = convertFakerData(pattern.jsonFileData);
 }
 
 /**
@@ -34,8 +43,8 @@ function onAddFakerData(patternlab) {
    */
 function registerEvents(patternlab) {
   //register our handler at the appropriate time of execution
-  // patternlab.events.on('patternlab-pattern-before-data-merge', onAddFakerData);
-  patternlab.events.on('patternlab-build-global-data-end', onAddFakerData);
+  patternlab.events.on('patternlab-build-global-data-end', addMainFakerData);
+  patternlab.events.on('patternlab-pattern-before-data-merge', addPatternFakerData);
 }
 
 /**
