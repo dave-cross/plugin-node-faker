@@ -28,10 +28,10 @@ faker.lorem.words(5) // returns 5 words
 faker.lorem.text(500) // returns random number of characters less than 500. Could be 20 chars. Could be 200.
 ```
 
-Check out Faker on NPM for all the different API methods (https://www.npmjs.com/package/faker).
+Check out Faker on NPM for all the different API methods (https://www.npmjs.com/package/faker). I've found Marak's Github wiki to be a little more detailed though (https://github.com/Marak/Faker.js/wiki).
 
 ## Work in process
 
-**This is not on NPM yet.** I have concerns that it isn't as optimal as it could be. If you have suggestions on how to improve it, I am all ears and ready to learn. For now, I'm `npm link`ing the module into a PL instance.
+I have concerns that it isn't as optimal as it could be. If you have suggestions on how to improve it, I am all ears and ready to learn.
 
-Like the PHP Faker plugin, this one doesn't want to operate on pattern-specific data. I'm probably just calling the wrong listener.
+A tale of two listeners. For some reason, I can't update the listitems object and the pattern-specific data object with one listener. `data.json` doesn't care where it's changed, but these other two get operated on in different places.
