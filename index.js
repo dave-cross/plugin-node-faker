@@ -6,37 +6,25 @@ const pluginName = 'plugin-node-faker';
 const faker = require('faker');
 
 function onAddFakerData(patternlab) {
-  // Convert data to JSON string and process. Then, return it to an object.
-  var stringData = JSON.stringify(patternlab.data, (key, value) => {
-    // Testy, testy. If value is a string, change it to 'shark'.
-    // if (typeof value === 'string') {
-    //   return 'shark';
-    // }
-    if (typeof value === 'string' && value.indexOf("faker") !== -1) {
-      var fakerItem = value.slice(6); // assume "faker." is the first 6 chars of value
-      try {
-        return faker.fake(`{{${fakerItem}}}`);
-      } catch (e) {
-        console.log("Oh oh!", e);
-      }
-    }
-    return value;
-  });
-  patternlab.data = JSON.parse(stringData);
+  // A list of things we'll iterate over.
+  var dataObjects = ['data', 'listitems'];
 
-  // do the same for list data
-  var listData = JSON.stringify(patternlab.listitems, (key, value) => {
-    if (typeof value === 'string' && value.indexOf("faker") !== -1) {
-      var fakerItem = value.slice(6); // assume "faker." is the first 6 chars of value
-      try {
-        return faker.fake(`{{${fakerItem}}}`);
-      } catch (e) {
-        console.log("Oh oh!", e);
+  dataObjects.forEach(function (dataObject) {
+    // Convert data to JSON string and process. Then, return it to an object.
+    var stringData = JSON.stringify(patternlab[dataObject], (key, value) => {
+      // find all the fakers
+      if (typeof value === 'string' && value.indexOf("faker") !== -1) {
+        var fakerItem = value.slice(6); // assume "faker." is the first 6 chars of value
+        try {
+          return faker.fake(`{{${fakerItem}}}`);
+        } catch (e) {
+          console.log("Uh oh!", e);
+        }
       }
-    }
-    return value;
+      return value;
+    });
+    patternlab[dataObject] = JSON.parse(stringData);
   });
-  patternlab.listitems = JSON.parse(listData);
 }
 
 /**
