@@ -23,6 +23,20 @@ function onAddFakerData(patternlab) {
     return value;
   });
   patternlab.data = JSON.parse(stringData);
+
+  // do the same for list data
+  var listData = JSON.stringify(patternlab.listitems, (key, value) => {
+    if (typeof value === 'string' && value.indexOf("faker") !== -1) {
+      var fakerItem = value.slice(6); // assume "faker." is the first 6 chars of value
+      try {
+        return faker.fake(`{{${fakerItem}}}`);
+      } catch (e) {
+        console.log("Oh oh!", e);
+      }
+    }
+    return value;
+  });
+  patternlab.listitems = JSON.parse(listData);
 }
 
 /**
@@ -32,7 +46,8 @@ function onAddFakerData(patternlab) {
    */
 function registerEvents(patternlab) {
   //register our handler at the appropriate time of execution
-  patternlab.events.on('patternlab-pattern-before-data-merge', onAddFakerData);
+  // patternlab.events.on('patternlab-pattern-before-data-merge', onAddFakerData);
+  patternlab.events.on('patternlab-build-global-data-end', onAddFakerData);
 }
 
 /**
