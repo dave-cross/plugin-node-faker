@@ -2,6 +2,12 @@
 
 This is a (still very early and totally in development) plugin that adds Faker data to your `data.json` file at build time.
 
+## Install
+
+`npm install --save plugin-node-faker`
+
+(Remember to run `NPM run postinstall` in your Pattern Lab base directory.)
+
 ## Usage
 
 In `data.json`, add Faker API methods as strings. Call the vars as you normally would inside Mustache (untested with other PL engines).

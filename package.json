@@ -1,6 +1,6 @@
 {
   "name": "plugin-node-faker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A plugin for Pattern Lab that allows Faker in the data.json file",
   "keywords": [
     "Pattern Lab",
